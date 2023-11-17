@@ -131,7 +131,7 @@ public class UserService {
     }
 
     @Transactional
-    public User signUp(UserInfoRequest userInfoRequest) throws Exception {
+    public boolean signUp(UserInfoRequest userInfoRequest) throws Exception {
         Long userId = null;
         try {
             userId = getCurrentUserId();
@@ -158,7 +158,7 @@ public class UserService {
             UserRole.SIGNUP_USER
         );
 
-        return user;
+        return true;
     }
 
     @Transactional

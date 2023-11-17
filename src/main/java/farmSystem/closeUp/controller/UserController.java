@@ -2,7 +2,6 @@ package farmSystem.closeUp.controller;
 
 
 import farmSystem.closeUp.common.CommonResponse;
-import farmSystem.closeUp.domain.User;
 import farmSystem.closeUp.dto.request.UserFollowRequest;
 import farmSystem.closeUp.dto.request.UserInfoRequest;
 import farmSystem.closeUp.dto.request.UserInterestRequest;
@@ -45,7 +44,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/user/sign-up")
-    public CommonResponse<User> signUp(@RequestBody @Valid final UserInfoRequest userInfoRequest) throws Exception {
+    public CommonResponse<Boolean> signUp(@RequestBody @Valid final UserInfoRequest userInfoRequest) throws Exception {
         return CommonResponse.success(userService.signUp(userInfoRequest));
     }
 
