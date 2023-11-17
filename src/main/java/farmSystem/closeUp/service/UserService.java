@@ -130,6 +130,7 @@ public class UserService {
         return user;
     }
 
+    @Transactional
     public User signUp(UserInfoRequest userInfoRequest) throws Exception {
         Long userId = null;
         try {
@@ -142,7 +143,8 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(Result.NOTFOUND_USER));
 
         // 닉네임 중복 체크
-        userRepository.findByNickName(userInfoRequest.getNickname()).orElseThrow(() -> new CustomException(Result.USERNAME_DUPLICATION));
+        boolean isUserNickName = userRepository.findByNickName(userInfoRequest.getNickname()).isEmpty();
+        if (!isUserNickName) throw new CustomException(Result.USERNAME_DUPLICATION);
 
         // 회원가입 레벨 통과
         user.update(
@@ -156,10 +158,10 @@ public class UserService {
             UserRole.SIGNUP_USER
         );
 
-        userRepository.save(user);
         return user;
     }
 
+    @Transactional
     public Boolean followBulk(UserFollowRequest userFollowRequest) throws Exception {
         Long userId = null;
         try {
@@ -180,11 +182,10 @@ public class UserService {
         }
 
         user.update(userId, UserRole.FOLLOWED_USER);
-        userRepository.save(user);
-
         return true;
     }
 
+    @Transactional
     public Boolean interestBulk(UserInterestRequest userInterestRequest) throws Exception {
         Long userId = null;
         try {
@@ -205,8 +206,6 @@ public class UserService {
         }
 
         user.update(userId, UserRole.INTERESTED_USER);
-        userRepository.save(user);
-
         return true;
     }
 
