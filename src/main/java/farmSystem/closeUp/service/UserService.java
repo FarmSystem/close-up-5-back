@@ -6,12 +6,11 @@ import farmSystem.closeUp.config.jwt.JwtService;
 import farmSystem.closeUp.config.redis.RedisUtils;
 import farmSystem.closeUp.config.security.SecurityUtils;
 import farmSystem.closeUp.domain.*;
-import farmSystem.closeUp.dto.request.UserFollowRequest;
-import farmSystem.closeUp.dto.request.UserInfoRequest;
-import farmSystem.closeUp.dto.request.UserInterestRequest;
-import farmSystem.closeUp.dto.request.UserRequestTest;
-import farmSystem.closeUp.dto.response.UserResponseTest;
+import farmSystem.closeUp.dto.user.request.UserFollowRequest;
+import farmSystem.closeUp.dto.user.request.UserInfoRequest;
+import farmSystem.closeUp.dto.user.request.UserInterestRequest;
 import farmSystem.closeUp.dto.user.response.GetSearchCreatorResponse;
+import farmSystem.closeUp.dto.user.response.PostSignUpResponse;
 import farmSystem.closeUp.dto.user.response.PostTokenReissueResponse;
 import farmSystem.closeUp.repository.UserInterestRepository;
 import farmSystem.closeUp.repository.follow.FollowRepository;
@@ -106,21 +105,20 @@ public class UserService {
     public User getCurrentUser() {
         try {
             return userRepository
-                    .findById(SecurityUtils.getCurrentUserId())
-                    .orElseThrow(() -> new CustomException(Result.NOTFOUND_USER));
+                    .findById(SecurityUtils.getCurrentUserId()).get();
         } catch (Exception e) {
             throw new CustomException(Result.NOTFOUND_USER);
         }
     }
 
     // 추가 회원가입
-    @Transactional
-    public UserResponseTest signUp(UserRequestTest userRequestTest){
-        User currentUser = getCurrentUser();
-        currentUser.signUp(userRequestTest.getNickname(), userRequestTest.getAddress(), userRequestTest.getPhoneNumber(), userRequestTest.getProfileImageUrl(), userRequestTest.getGender(), userRequestTest.getBirthday());
-        currentUser.authorizeUser(UserRole.USER);
-        return UserResponseTest.builder().userId(currentUser.getUserId()).build();
-    }
+//    @Transactional
+//    public UserResponseTest signUp(UserRequestTest userRequestTest){
+//        User currentUser = getCurrentUser();
+//        currentUser.signUp(userRequestTest.getNickname(), userRequestTest.getAddress(), userRequestTest.getPhoneNumber(), userRequestTest.getProfileImageUrl(), userRequestTest.getGender(), userRequestTest.getBirthday());
+//        currentUser.authorizeUser(UserRole.USER);
+//        return UserResponseTest.builder().userId(currentUser.getUserId()).build();
+//    }
 
     //권한 확인용
     @Transactional(readOnly = true)
@@ -131,20 +129,24 @@ public class UserService {
     }
 
     @Transactional
-    public boolean signUp(UserInfoRequest userInfoRequest) throws Exception {
+    public PostSignUpResponse signUp(UserInfoRequest userInfoRequest){
         Long userId = null;
+        log.info("sign up");
         try {
             userId = getCurrentUserId();
         } catch (AuthenticationException e) {
             throw new CustomException(Result.INVALID_ACCESS);
         }
+        log.info("sign up");
 
         // 만약 유저 존재 안할 경우 에러
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(Result.NOTFOUND_USER));
+        log.info("sign up");
 
         // 닉네임 중복 체크
-        boolean isUserNickName = userRepository.findByNickName(userInfoRequest.getNickname()).isEmpty();
-        if (!isUserNickName) throw new CustomException(Result.USERNAME_DUPLICATION);
+        if(userRepository.existsByNickName(userInfoRequest.getNickname())){
+            new CustomException(Result.USERNAME_DUPLICATION);
+        }
 
         // 회원가입 레벨 통과
         user.update(
@@ -157,12 +159,13 @@ public class UserService {
             userInfoRequest.getBirthday(),
             UserRole.SIGNUP_USER
         );
+        log.info("sign up");
 
-        return true;
+        return PostSignUpResponse.of(user.getUserId(), user.getUserRole());
     }
 
     @Transactional
-    public Boolean followBulk(UserFollowRequest userFollowRequest) throws Exception {
+    public PostSignUpResponse followBulk(UserFollowRequest userFollowRequest){
         Long userId = null;
         try {
             userId = getCurrentUserId();
@@ -182,11 +185,12 @@ public class UserService {
         }
 
         user.update(userId, UserRole.FOLLOWED_USER);
-        return true;
+
+        return PostSignUpResponse.of(user.getUserId(), user.getUserRole());
     }
 
     @Transactional
-    public Boolean interestBulk(UserInterestRequest userInterestRequest) throws Exception {
+    public PostSignUpResponse interestBulk(UserInterestRequest userInterestRequest){
         Long userId = null;
         try {
             userId = getCurrentUserId();
@@ -205,8 +209,10 @@ public class UserService {
             userInterestRepository.save(userInterest);
         }
 
-        user.update(userId, UserRole.INTERESTED_USER);
-        return true;
+        user.update(userId, UserRole.USER);
+        userRepository.save(user);
+
+        return PostSignUpResponse.of(user.getUserId(), user.getUserRole());
     }
 
 }

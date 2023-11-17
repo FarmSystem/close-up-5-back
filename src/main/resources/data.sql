@@ -40,19 +40,19 @@ VALUES ('인플루언서4', '', '주소8', '010-1234-5678', '이미지8', '인�
 
 -- 회원 추가
 INSERT INTO user (nick_name, password, address, phone_number, profile_image_url, email, user_role, social_type, social_id, gender, birth_day, point, profile_comment, verification_image_url, platform_id, created_at)
-VALUES ('최필환', null, '동국대학교', '010-1234-5678', '카카오url', '최필환@example.com', 'USER', 'KAKAO', '1', 'male', '2000-06-17', 0, null, null, NULL, '2023-03-02');
+VALUES ('최필환1', null, '동국대학교', '010-1234-5678', '카카오url', '최필환@example.com', 'USER', 'KAKAO', '1', 'male', '2000-06-17', 0, null, null, NULL, '2023-03-02');
 
 INSERT INTO user (nick_name, password, address, phone_number, profile_image_url, email, user_role, social_type, social_id, gender, birth_day, point, profile_comment, verification_image_url, platform_id, created_at)
-VALUES ('최필환', null, '동국대학교', '010-1234-5678', '카카오url', '최필환@example.com', 'USER', 'KAKAO', '1', 'male', '2000-06-17', 0, null , null, NULL, '2023-09-12');
+VALUES ('최필환2', null, '동국대학교', '010-1234-5678', '카카오url', '최필환@example.com', 'USER', 'KAKAO', '1', 'male', '2000-06-17', 0, null , null, NULL, '2023-09-12');
 
 INSERT INTO user (nick_name, password, address, phone_number, profile_image_url, email, user_role, social_type, social_id, gender, birth_day, point, profile_comment, verification_image_url, platform_id, created_at)
-VALUES ('최필환', null, '동국대학교', '010-1234-5678', '카카오url', '최필환@example.com', 'USER', 'KAKAO', '1', 'male', '2000-06-17', 0, null, null, NULL, '2023-09-13');
+VALUES ('최필환3', null, '동국대학교', '010-1234-5678', '카카오url', '최필환@example.com', 'USER', 'KAKAO', '1', 'male', '2000-06-17', 0, null, null, NULL, '2023-09-13');
 
 INSERT INTO user (nick_name, password, address, phone_number, profile_image_url, email, user_role, social_type, social_id, gender, birth_day, point, profile_comment, verification_image_url, platform_id, created_at)
-VALUES ('최필환', null, '동국대학교', '010-1234-5678', '카카오url', '최필환@example.com', 'USER', 'KAKAO', '1', 'male', '2000-06-17', 0, null, null, NULL, '2023-08-12');
+VALUES ('최필환4', null, '동국대학교', '010-1234-5678', '카카오url', '최필환@example.com', 'USER', 'KAKAO', '1', 'male', '2000-06-17', 0, null, null, NULL, '2023-08-12');
 
 INSERT INTO user (nick_name, password, address, phone_number, profile_image_url, email, user_role, social_type, social_id, gender, birth_day, point, profile_comment, verification_image_url, platform_id, created_at)
-VALUES ('최필환', null, '동국대학교', '010-1234-5678', '카카오url', '최필환@example.com', 'USER', 'KAKAO', '1', 'male', '2000-06-17', 0, null, null ,NULL, '2023-07-02');
+VALUES ('최필환5', null, '동국대학교', '010-1234-5678', '카카오url', '최필환@example.com', 'USER', 'KAKAO', '1', 'male', '2000-06-17', 0, null, null ,NULL, '2023-07-02');
 
 -- 래플 카테고리 추가
 INSERT INTO category (parent_id, category_name) VALUES (NULL, '유형');
@@ -93,10 +93,10 @@ VALUES (now(), 4, '래플4 이미지 url', '원래 이미지 이름1', '업로�
 
 
 -- 래플 판매자 설정
-UPDATE raffle_product SET user_id = 1 WHERE raffle_product_id = 2;
-UPDATE raffle_product SET user_id = 2 WHERE raffle_product_id = 3;
-UPDATE raffle_product SET user_id = 3 WHERE raffle_product_id = 4;
-UPDATE raffle_product SET user_id = 4 WHERE raffle_product_id = 5;
+UPDATE raffle_product SET user_id = 1 WHERE raffle_product_id = 1;
+UPDATE raffle_product SET user_id = 2 WHERE raffle_product_id = 2;
+UPDATE raffle_product SET user_id = 3 WHERE raffle_product_id = 3;
+UPDATE raffle_product SET user_id = 4 WHERE raffle_product_id = 4;
 
 -- 팔로우 설정
 INSERT INTO follow (user_id, creator_id) VALUES (9, 1);
@@ -134,3 +134,9 @@ INSERT INTO guest_book (user_id, creator_id, content, created_at)
 VALUES (9, 3, '봉주르', '2023-09-02 14:00:00');
 INSERT INTO guest_book (user_id, creator_id, content, created_at)
 VALUES (10, 7, '사와디캅', '2023-09-05 12:00:00');
+
+-- 관심사
+Insert INTO interest (interest_id, interest_name) VALUES (1, '게임');
+Insert INTO interest (interest_id, interest_name) VALUES (2, '여행');
+Insert INTO interest (interest_id, interest_name) VALUES (3, '먹방');
+Insert INTO interest (interest_id, interest_name) VALUES (4, '패션');

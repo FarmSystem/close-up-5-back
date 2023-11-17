@@ -2,10 +2,11 @@ package farmSystem.closeUp.controller;
 
 
 import farmSystem.closeUp.common.CommonResponse;
-import farmSystem.closeUp.dto.request.UserFollowRequest;
-import farmSystem.closeUp.dto.request.UserInfoRequest;
-import farmSystem.closeUp.dto.request.UserInterestRequest;
+import farmSystem.closeUp.dto.user.request.UserFollowRequest;
+import farmSystem.closeUp.dto.user.request.UserInfoRequest;
+import farmSystem.closeUp.dto.user.request.UserInterestRequest;
 import farmSystem.closeUp.dto.user.response.GetSearchCreatorResponse;
+import farmSystem.closeUp.dto.user.response.PostSignUpResponse;
 import farmSystem.closeUp.dto.user.response.PostTokenReissueResponse;
 import farmSystem.closeUp.service.UserService;
 import jakarta.validation.Valid;
@@ -44,17 +45,18 @@ public class UserController {
     }
 
     @PostMapping(value = "/user/sign-up")
-    public CommonResponse<Boolean> signUp(@RequestBody @Valid final UserInfoRequest userInfoRequest) throws Exception {
+    public CommonResponse<PostSignUpResponse> signUp(@RequestBody @Valid final UserInfoRequest userInfoRequest){
+        log.info("start");
         return CommonResponse.success(userService.signUp(userInfoRequest));
     }
 
     @PostMapping(value = "/user/sign-up/follow")
-    public CommonResponse<Boolean> signUpFollowBulk(@RequestBody @Valid final UserFollowRequest userFollowRequest) throws Exception {
+    public CommonResponse<PostSignUpResponse> signUpFollowBulk(@RequestBody @Valid final UserFollowRequest userFollowRequest){
         return CommonResponse.success(userService.followBulk(userFollowRequest));
     }
 
     @PostMapping(value = "/user/sign-up/interest")
-    public CommonResponse<Boolean> signUpInterestBulk(@RequestBody @Valid final UserInterestRequest userInterestRequest) throws Exception {
+    public CommonResponse<PostSignUpResponse> signUpInterestBulk(@RequestBody @Valid final UserInterestRequest userInterestRequest){
         return CommonResponse.success(userService.interestBulk(userInterestRequest));
     }
 }

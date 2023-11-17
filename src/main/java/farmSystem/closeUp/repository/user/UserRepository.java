@@ -20,6 +20,8 @@ public interface UserRepository extends JpaRepository<User, Long> , UserReposito
 
     List<User> findByNickNameContainingAndUserRole(String searchName, UserRole userRole);
 
+    boolean existsByNickName(String nickName);
+
 //    List<User> findByPlatform(Long platformId);
 
 }

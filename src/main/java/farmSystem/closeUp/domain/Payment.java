@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,10 +21,11 @@ public class Payment {
     private Long chargePoint;
     private String merchantId;
     private String impUid;
-    private String status;
-    private String createAt;
-    private String failedAt;
-    private String paidAt;
+    @Enumerated(EnumType.STRING)
+    private Status status;
+    private LocalDateTime createAt;
+    private LocalDateTime failedAt;
+    private LocalDateTime paidAt;
     private String failedReason;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,7 +33,7 @@ public class Payment {
     private User user;
 
     @Builder
-    public Payment(Long paymentId, Long chargePoint, String merchantId, String impUid, String status, String createAt, String failedAt, String paidAt, String failedReason) {
+    public Payment(Long paymentId, Long chargePoint, String merchantId, String impUid, Status status, LocalDateTime createAt, LocalDateTime failedAt, LocalDateTime paidAt, String failedReason) {
         this.paymentId = paymentId;
         this.chargePoint = chargePoint;
         this.merchantId = merchantId;
@@ -40,6 +43,28 @@ public class Payment {
         this.failedAt = failedAt;
         this.paidAt = paidAt;
         this.failedReason = failedReason;
+    }
+
+    public void setStatus(Status status){
+        this.status = status;
+    }
+
+    // 포인트 충전 금액과 실제 결제 금액이 같은 경우 호출
+    public void successPaymentCharge(String impUid, Status status, LocalDateTime paidAt){
+        this.impUid = impUid;
+        this.status = status;
+        this.paidAt = paidAt;
+    }
+
+    public void failPaymentCharge(String impUid, Status status, LocalDateTime failedAt, String failedReason){
+        this.impUid = impUid;
+        this.status = status;
+        this.failedAt = failedAt;
+        this.failedReason = failedReason;
+    }
+
+    public void setUser(User user){
+        this.user = user;
     }
 
 

@@ -1,4 +1,4 @@
-package farmSystem.closeUp.dto.request;
+package farmSystem.closeUp.dto.user.request;
 
 import lombok.Getter;
 
