@@ -1,6 +1,7 @@
 package farmSystem.closeUp.controller;
 
 import farmSystem.closeUp.common.CommonResponse;
+import farmSystem.closeUp.dto.raffle.response.GetRafflesResponse;
 import farmSystem.closeUp.dto.raffleProduct.response.GetRaffleProductPaymentResponse;
 import farmSystem.closeUp.dto.raffleProduct.response.GetRaffleProductResponse;
 import farmSystem.closeUp.dto.raffleProduct.response.GetRaffleProductsResponse;
@@ -48,14 +49,23 @@ public class RaffleProductController {
         return CommonResponse.success(raffleProductService.getRaffleProduct(raffleProductId));
     }
 
-    // 래플 결제 페이지(주문 정보 조회)
+    // 크리에이터 탭안에서 크리에이터 래플 조회 (무한 스크롤)
+    @GetMapping("/user/{creatorId}/raffle-products")
+    public CommonResponse<Slice<GetRaffleProductsResponse>> getCreatorRaffleProducts(@PathVariable("creatorId") Long creatorId, Pageable pageable) {
+        return CommonResponse.success(raffleProductService.getCreatorRaffleProducts(creatorId, pageable));
+    }
+
+    // 래플 상세 페이지에서 신청하기 버튼 클릭 - 응모 페이지 조회
     @GetMapping("/user/raffle-products/{raffleProductId}/order")
     public CommonResponse<GetRaffleProductPaymentResponse> getOrder(@PathVariable("raffleProductId") Long raffleProductId){
         return CommonResponse.success(raffleProductService.getOrder(raffleProductId));
     }
 
+    // 래플 응모 유저 정보 수정하기
 
-    // 래플 신청(결제 완료)
+
+
+    // 래플 응모하기 - 포인트 차감
     @PostMapping("/user/raffle-products/{raffleProductId}/order")
     public CommonResponse<PostRaffleProductResponse> postRaffleProduct(@PathVariable("raffleProductId") Long raffleProductId){
         return CommonResponse.success(raffleProductService.postRaffleProduct(raffleProductId));

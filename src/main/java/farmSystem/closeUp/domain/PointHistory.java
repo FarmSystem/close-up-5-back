@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,24 +18,27 @@ public class PointHistory extends BaseEntity{
     @Column(name = "pointhistory_id")
     private Long pointHistoryId;
 
-    private Long balancePoint;
     private Long plusPoint;
     private Long minusPoint;
-    private String raffleTitle;
-    private String pointEventAt;
+    private String pointHistoryName;
+    private LocalDateTime pointEventAt;
+//    @Enumerated(EnumType.STRING)
+//    private Status status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user; //일반 유저, 크리에이터
 
     @Builder
-    public PointHistory(Long pointHistoryId, Long balancePoint, Long plusPoint, Long minusPoint, String raffleTitle, String pointEventAt){
-        this.pointHistoryId = pointHistoryId;
-        this.balancePoint = balancePoint;
+    public PointHistory(Long plusPoint, Long minusPoint, String pointHistoryName, LocalDateTime pointEventAt) {
         this.plusPoint = plusPoint;
         this.minusPoint = minusPoint;
-        this.raffleTitle = raffleTitle;
+        this.pointHistoryName = pointHistoryName;
         this.pointEventAt = pointEventAt;
+//        this.status = status;
     }
 
+    public void setUser(User user){
+        this.user = user;
+    }
 }

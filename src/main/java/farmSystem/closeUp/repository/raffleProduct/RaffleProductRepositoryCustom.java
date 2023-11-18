@@ -11,4 +11,6 @@ public interface RaffleProductRepositoryCustom {
 
     Slice<GetRaffleProductsResponse> findRaffleProducts(Pageable pageable);
     Slice<GetRaffleProductsResponse> findFollowingRaffleProducts(List<Long> creatorIds, Pageable pageable);
+
+    Slice<GetRaffleProductsResponse> findCreatorRaffleProducts(Long creatorId, Pageable pageable);
 }

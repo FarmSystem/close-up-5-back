@@ -14,8 +14,9 @@ public class GetRaffleProductPaymentResponse {
     private String userNickname;
     private String userPhoneNumber;
     private String userAddress;
+    private Long userPoint;
 
-    public static GetRaffleProductPaymentResponse of(Long raffleProductId, String raffleProductTitle, Long raffleProductPrice, String raffleProductThumbnailImage, String userNickname, String userPhoneNumber, String userAddress) {
+    public static GetRaffleProductPaymentResponse of(Long raffleProductId, String raffleProductTitle, Long raffleProductPrice, String raffleProductThumbnailImage, String userNickname, String userPhoneNumber, String userAddress, Long userPoint) {
         return GetRaffleProductPaymentResponse.builder()
                 .raffleProductId(raffleProductId)
                 .raffleProductTitle(raffleProductTitle)
@@ -24,6 +25,7 @@ public class GetRaffleProductPaymentResponse {
                 .userNickname(userNickname)
                 .userPhoneNumber(userPhoneNumber)
                 .userAddress(userAddress)
+                .userPoint(userPoint)
                 .build();
     }
 }

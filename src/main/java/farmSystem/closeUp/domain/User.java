@@ -92,4 +92,8 @@ public class User extends BaseEntity{
     public void setPlatform(Platform platform) {
         this.platform = platform;
     }
+
+    public void minusPoint(Long point) {
+        this.point -= point;
+    }
 }

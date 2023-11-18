@@ -40,6 +40,8 @@ public enum Result {
 
     // 래플
     NOTFOUND_RAFFLE(404, "해당 래플이 존재하지 않습니다."),
+    RAFFLE_END(404, "래플 응모가 마감됐습니다."),
+    NOT_ENOUGH_POINT(404, "응모할 포인트가 부족합니다"),
 
     // 포인트
     LESS_THAN_MINIMUM_POINT(400, "5000원 이상부터 충전이 가능합니다."),
