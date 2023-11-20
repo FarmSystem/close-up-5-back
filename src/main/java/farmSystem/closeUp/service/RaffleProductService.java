@@ -3,8 +3,7 @@ package farmSystem.closeUp.service;
 import farmSystem.closeUp.common.CustomException;
 import farmSystem.closeUp.common.Result;
 import farmSystem.closeUp.domain.*;
-import farmSystem.closeUp.dto.raffle.response.GetRafflesResponse;
-import farmSystem.closeUp.dto.raffleProduct.response.GetRaffleProductPaymentResponse;
+import farmSystem.closeUp.dto.raffleProduct.response.GetRaffleProductApplyResponse;
 import farmSystem.closeUp.dto.raffleProduct.response.GetRaffleProductResponse;
 import farmSystem.closeUp.dto.raffleProduct.response.GetRaffleProductsResponse;
 import farmSystem.closeUp.dto.raffleProduct.response.PostRaffleProductResponse;
@@ -102,7 +101,7 @@ public class RaffleProductService {
 
     // 래플 응모 페이지(주문 정보 조회)
     @Transactional(readOnly = true)
-    public GetRaffleProductPaymentResponse getOrder(Long raffleProductId) {
+    public GetRaffleProductApplyResponse getOrder(Long raffleProductId) {
 
         User user = userService.getCurrentUser();
         RaffleProduct raffleProduct = raffleProductRepository.findById(raffleProductId).orElseThrow(() -> new CustomException(Result.NOTFOUND_RAFFLE));
@@ -112,10 +111,10 @@ public class RaffleProductService {
             throw new CustomException(Result.RAFFLE_END);
         }
 
-        GetRaffleProductPaymentResponse getRaffleProductPaymentResponse =
-                GetRaffleProductPaymentResponse.of(raffleProduct.getRaffleProductId(), raffleProduct.getTitle(), raffleProduct.getRafflePrice(), raffleProduct.getThumbnailImageUrl(), user.getNickName(), user.getPhoneNumber(), user.getAddress(), user.getPoint());
+        GetRaffleProductApplyResponse getRaffleProductApplyResponse =
+                GetRaffleProductApplyResponse.of(raffleProduct.getRaffleProductId(), raffleProduct.getTitle(), raffleProduct.getRafflePrice(), raffleProduct.getThumbnailImageUrl(), user.getNickName(), user.getPhoneNumber(), user.getAddress(), user.getPoint());
 
-        return getRaffleProductPaymentResponse;
+        return getRaffleProductApplyResponse;
     }
 
     // 래플 신청 완료(포인트 차감)
