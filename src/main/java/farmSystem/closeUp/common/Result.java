@@ -31,6 +31,7 @@ public enum Result {
     USERNAME_DUPLICATION(400, "이미 등록된 닉네임입니다."),
     LOGIN_INPUT_INVALID(400, "로그인 정보를 다시 확인해주세요."),
     NOTFOUND_USER(404,  "유저를 찾을 수 없습니다."),
+    NOTFOUND_CREATOR(404,  "크리에이터를 찾을 수 없습니다."),
     UNAUTHORIZED_TOKEN(401, "유효한 토큰이 없습니다."),
 
 

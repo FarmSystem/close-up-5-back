@@ -188,7 +188,7 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(Result.NOTFOUND_USER));
 
         for (Long creatorId : userFollowRequest.getCreatorId()) {
-            User creator = User.builder().userId(creatorId).build();
+            User creator = userRepository.findById(creatorId).orElseThrow(() -> new CustomException(Result.NOTFOUND_CREATOR));
             Follow followCreator = Follow.builder()
                     .user(user)
                     .creator(creator)
