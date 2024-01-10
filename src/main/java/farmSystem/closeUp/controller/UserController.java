@@ -27,6 +27,21 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
+    /*
+    1. 회원가입
+     */
+
+    // 유저 회원가입
+    @PostMapping(value = "/user/sign-up")
+    public CommonResponse<PostSignUpResponse> signUp(@RequestPart @Valid final UserInfoRequest userInfoRequest, @RequestPart MultipartFile profileImage){
+        return CommonResponse.success(userService.signUp(userInfoRequest, profileImage));
+    }
+
+    // 크리에이터 회원가입
+    @PostMapping(value = "/creator/sign-up")
+    public CommonResponse<PostSignUpResponse> signUpCreator(@RequestPart @Valid final PostCreatorInfoRequest postCreatorInfoRequest, @RequestPart MultipartFile profileImage, @RequestPart MultipartFile verificationImage){
+        return CommonResponse.success(userService.signUpCreator(postCreatorInfoRequest, profileImage, verificationImage));
+    }
 
     // 따라서 redis의 refreshToken과 전달받은 refreshToken 비교 후 일치한다면 accessToken, refreshToken 재발급
     @PostMapping("/token/reissue")
@@ -47,12 +62,6 @@ public class UserController {
         return CommonResponse.success(userService.searchCreatorByPlatform(platformId, pageable));
     }
 
-    @PostMapping(value = "/user/sign-up")
-    public CommonResponse<PostSignUpResponse> signUp(@RequestBody @Valid final UserInfoRequest userInfoRequest){
-        log.info("start");
-        return CommonResponse.success(userService.signUp(userInfoRequest));
-    }
-
     @PostMapping(value = "/user/sign-up/follow")
     public CommonResponse<PostSignUpResponse> signUpFollowBulk(@RequestBody @Valid final UserFollowRequest userFollowRequest){
         return CommonResponse.success(userService.followBulk(userFollowRequest));
@@ -63,11 +72,6 @@ public class UserController {
         return CommonResponse.success(userService.interestBulk(userInterestRequest));
     }
 
-    // 크리에이터 회원가입
-    @PostMapping(value = "/creator/sign-up")
-    public CommonResponse<PostSignUpResponse> signUpCreator(@RequestPart @Valid final PostCreatorInfoRequest postCreatorInfoRequest, @RequestPart MultipartFile multipartFile){
-        return CommonResponse.success(userService.signUpCreator(postCreatorInfoRequest, multipartFile));
-    }
 
     // 크리에이터 플랫폼, 활동 장르 설정 및 본인인증
     @PostMapping(value = "/creator/sign-up/setting")

@@ -16,4 +16,6 @@ public class GetUserRaffleDetailResponse {
     private String raffleProductTitle;
     private String raffleProductThumbnailUrl;
     private String raffleProductContent;
+    private String creatorName;
+    private String winningProductUrl;
 }

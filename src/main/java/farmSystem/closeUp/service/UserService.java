@@ -28,6 +28,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.naming.AuthenticationException;
@@ -121,15 +122,6 @@ public class UserService {
         }
     }
 
-    // 추가 회원가입
-//    @Transactional
-//    public UserResponseTest signUp(UserRequestTest userRequestTest){
-//        User currentUser = getCurrentUser();
-//        currentUser.signUp(userRequestTest.getNickname(), userRequestTest.getAddress(), userRequestTest.getPhoneNumber(), userRequestTest.getProfileImageUrl(), userRequestTest.getGender(), userRequestTest.getBirthday());
-//        currentUser.authorizeUser(UserRole.USER);
-//        return UserResponseTest.builder().userId(currentUser.getUserId()).build();
-//    }
-
     //권한 확인용
     @Transactional(readOnly = true)
     public User getUser(Long userId){
@@ -138,40 +130,88 @@ public class UserService {
         return user;
     }
 
+    // 회원 추가 가입(개인 정보 입력)
     @Transactional
-    public PostSignUpResponse signUp(UserInfoRequest userInfoRequest){
+    public PostSignUpResponse signUp(UserInfoRequest userInfoRequest, MultipartFile profileImage){
         Long userId = null;
-        log.info("sign up");
+
         try {
             userId = getCurrentUserId();
         } catch (AuthenticationException e) {
             throw new CustomException(Result.INVALID_ACCESS);
         }
-        log.info("sign up");
 
         // 만약 유저 존재 안할 경우 에러
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(Result.NOTFOUND_USER));
-        log.info("sign up");
 
         // 닉네임 중복 체크
         if(userRepository.existsByNickName(userInfoRequest.getNickname())){
             new CustomException(Result.USERNAME_DUPLICATION);
         }
-//        userRepository.findByNickName(userInfoRequest.getNickname()).orElseThrow(() -> new CustomException(Result.USERNAME_DUPLICATION));
-//        log.info("sign up");
 
-        // 회원가입 레벨 통과
+        String profileImageUrl = null;
+
+        try {
+            profileImageUrl = s3UploadService.saveFile(profileImage, profileImage.getName() + UUID.randomUUID());
+        } catch (IOException e) {
+            new CustomException(Result.FILE_UPLOAD_FAIL);
+        }
+
+        // 추가 정보 업데이트
         user.update(
             userId,
             userInfoRequest.getNickname(),
             userInfoRequest.getAddress(),
             userInfoRequest.getPhoneNumber(),
-            userInfoRequest.getProfileImageUrl(),
-            userInfoRequest.getGender(),
-            userInfoRequest.getBirthday(),
-            UserRole.SIGNUP_USER
+            profileImageUrl,
+            UserRole.USER
         );
-        log.info("sign up");
+
+        log.info("유저 - 추가 가입 성공");
+
+        return PostSignUpResponse.of(user.getUserId(), user.getUserRole());
+    }
+
+    @Transactional
+    // 크리에이터 추가 가입
+    public PostSignUpResponse signUpCreator(PostCreatorInfoRequest postCreatorInfoRequest, MultipartFile profileImage, MultipartFile verificationImage) {
+        Long userId = null;
+        try {
+            userId = getCurrentUserId();
+        } catch (AuthenticationException e) {
+            throw new CustomException(Result.INVALID_ACCESS);
+        }
+
+        // 만약 유저 존재 안할 경우 에러
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(Result.NOTFOUND_USER));
+
+        // 닉네임 중복 체크
+        if(userRepository.existsByNickName(postCreatorInfoRequest.getNickname())){
+            new CustomException(Result.USERNAME_DUPLICATION);
+        }
+
+        String profileImageUrl = null;
+        String verificationImageUrl = null;
+
+        try {
+            profileImageUrl = s3UploadService.saveFile(profileImage, profileImage.getName() + UUID.randomUUID());
+            verificationImageUrl = s3UploadService.saveFile(verificationImage, verificationImage.getName()+UUID.randomUUID());
+        } catch (IOException e) {
+            new CustomException(Result.FILE_UPLOAD_FAIL);
+        }
+
+        // 회원가입 레벨 통과
+        user.update(
+                userId,
+                postCreatorInfoRequest.getNickname(),
+                postCreatorInfoRequest.getAddress(),
+                postCreatorInfoRequest.getPhoneNumber(),
+                profileImageUrl,
+                postCreatorInfoRequest.getProfileComment(),
+                verificationImageUrl,
+                UserRole.CREATOR
+        );
+        log.info("크리에이터 추가 가입 완료");
 
         return PostSignUpResponse.of(user.getUserId(), user.getUserRole());
     }
@@ -223,51 +263,6 @@ public class UserService {
 
         user.update(userId, UserRole.USER);
 //        userRepository.save(user);
-
-        return PostSignUpResponse.of(user.getUserId(), user.getUserRole());
-    }
-
-    @Transactional
-    // 크리에이터 회원가입(정보 입력) , multipart 없으면? 어캐댐?
-    public PostSignUpResponse signUpCreator(PostCreatorInfoRequest postCreatorInfoRequest, MultipartFile multipartFile) {
-        Long userId = null;
-        try {
-            userId = getCurrentUserId();
-        } catch (AuthenticationException e) {
-            throw new CustomException(Result.INVALID_ACCESS);
-        }
-
-        // 만약 유저 존재 안할 경우 에러
-        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(Result.NOTFOUND_USER));
-
-        // 닉네임 중복 체크
-        if(userRepository.existsByNickName(postCreatorInfoRequest.getNickname())){
-            new CustomException(Result.USERNAME_DUPLICATION);
-        }
-
-        String fileName = "creator_profile/"+ UUID.randomUUID()+ multipartFile.getOriginalFilename();
-
-        try {
-            s3UploadService.saveFile(multipartFile, fileName);
-        } catch (IOException e) {
-            new CustomException(Result.FILE_UPLOAD_FAIL);
-        }
-
-        user.setProfileImageUrl(fileName);
-
-        // 회원가입 레벨 통과
-        user.update(
-                userId,
-                postCreatorInfoRequest.getNickname(),
-                postCreatorInfoRequest.getAddress(),
-                postCreatorInfoRequest.getPhoneNumber(),
-                postCreatorInfoRequest.getProfileImageUrl(),
-                postCreatorInfoRequest.getProfileComment(),
-                postCreatorInfoRequest.getGender(),
-                postCreatorInfoRequest.getBirthday(),
-                UserRole.SIGNUP_CREATOR
-        );
-        log.info("sign up");
 
         return PostSignUpResponse.of(user.getUserId(), user.getUserRole());
     }

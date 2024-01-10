@@ -9,4 +9,6 @@ import java.util.List;
 public interface RaffleProductRepository extends JpaRepository<RaffleProduct, Long>, RaffleProductRepositoryCustom {
 
     List<RaffleProduct> findByEndDate(LocalDate endDate);
+
+    List<RaffleProduct> findByWinningDate(LocalDate winningDate);
 }

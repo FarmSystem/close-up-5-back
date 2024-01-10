@@ -37,28 +37,28 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
             // User의 Role이 GUEST일 경우 처음 요청한 회원이므로 회원가입 페이지로 리다이렉트
             if(oAuth2User.getUserRole() == UserRole.GUEST) {
-                targetUrl = "http://localhost:8080/login-success-test"; //프론트에 맞게 변경
+                targetUrl = "http://localhost:8080/login-success-test"; //추가 회원가입 url
                 String redirectUrl = createToken(response, oAuth2User, targetUrl);
 
                 // 로그인 확인 페이지로 리다이렉트 시킨다.
                 log.info("추가 회원가입 진행");
                 getRedirectStrategy().sendRedirect(request, response, redirectUrl);
 
-            } else if(oAuth2User.getUserRole() == UserRole.INTERESTED_USER) { // 가입은 됐지만, 관심사 설정 안한경우
-                targetUrl = "http://localhost:8080/user/interest";
-                String redirectUrl = createToken(response, oAuth2User, targetUrl);
-                log.info("관심사 설정 페이지로 이동");
-                getRedirectStrategy().sendRedirect(request, response, redirectUrl);
-            } else if(oAuth2User.getUserRole() == UserRole.FOLLOWED_USER) { // 관심사 설정까지 했지만, 크리에이터 팔로우 설정을 안한 경우
-                targetUrl = "http://localhost:8080/user/creator-follow";
-                String redirectUrl = createToken(response, oAuth2User, targetUrl);
-                log.info("크리에이터 팔로우 페이지로 이동");
-                getRedirectStrategy().sendRedirect(request, response, redirectUrl);
-            } else if (oAuth2User.getUserRole() == UserRole.SIGNUP_CREATOR) { // 크리에이터가 추가정보는 입력했는데, 플랫폼 정보 및 관심사 설정안한경우
-                targetUrl = "http://localhost:8080/creator/interest";
-                String redirectUrl = createToken(response, oAuth2User, targetUrl);
-                log.info("크리에이터 플랫폼 및 이미지 검증 및 관심사 설정 페이지로 이동");
-                getRedirectStrategy().sendRedirect(request, response, redirectUrl);
+//            } else if(oAuth2User.getUserRole() == UserRole.INTERESTED_USER) { // 가입은 됐지만, 관심사 설정 안한경우
+//                targetUrl = "http://localhost:8080/user/interest";
+//                String redirectUrl = createToken(response, oAuth2User, targetUrl);
+//                log.info("관심사 설정 페이지로 이동");
+//                getRedirectStrategy().sendRedirect(request, response, redirectUrl);
+//            } else if(oAuth2User.getUserRole() == UserRole.FOLLOWED_USER) { // 관심사 설정까지 했지만, 크리에이터 팔로우 설정을 안한 경우
+//                targetUrl = "http://localhost:8080/user/creator-follow";
+//                String redirectUrl = createToken(response, oAuth2User, targetUrl);
+//                log.info("크리에이터 팔로우 페이지로 이동");
+//                getRedirectStrategy().sendRedirect(request, response, redirectUrl);
+//            } else if (oAuth2User.getUserRole() == UserRole.SIGNUP_CREATOR) { // 크리에이터가 추가정보는 입력했는데, 플랫폼 정보 및 관심사 설정안한경우
+//                targetUrl = "http://localhost:8080/creator/interest";
+//                String redirectUrl = createToken(response, oAuth2User, targetUrl);
+//                log.info("크리에이터 플랫폼 및 이미지 검증 및 관심사 설정 페이지로 이동");
+//                getRedirectStrategy().sendRedirect(request, response, redirectUrl);
             }
         } catch (Exception e) {
             throw e;

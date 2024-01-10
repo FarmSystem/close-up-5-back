@@ -24,16 +24,16 @@ public class Category extends BaseEntity {
 //   @JoinColumn(name = "raffleProduct_id")
 //   private RaffleProduct raffleProduct;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    @OnDelete(action= OnDeleteAction.CASCADE)
-    private Category parent;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "parent_id")
+//    @OnDelete(action= OnDeleteAction.CASCADE)
+//    private Category parent;
 
     @Builder
-    public Category(Long categoryId, String categoryName, Category parent) {
+    public Category(Long categoryId, String categoryName) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
-        this.parent = parent;
+//        this.parent = parent;
     }
 
 }

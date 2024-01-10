@@ -11,13 +11,6 @@ public class PostCreatorInfoRequest {
     private String address;
     @NotBlank(message = "휴대전화번호 입력은 필수입니다.")
     private String phoneNumber;
-
-    @NotBlank(message = "성별 입력은 필수입니다.")
-    private String gender;
-    @NotBlank(message = "생일 입력은 필수입니다.")
-    private String birthday;
-    @NotBlank(message = "프로필 이미지는 필수입니다.")
-    private String profileImageUrl;
     @NotBlank(message = "한줄소개는 필수입니다.")
     private String profileComment;
 }

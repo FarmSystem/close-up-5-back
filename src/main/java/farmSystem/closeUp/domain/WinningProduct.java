@@ -1,13 +1,13 @@
 package farmSystem.closeUp.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@AllArgsConstructor
 public class WinningProduct extends BaseEntity{
 
     @Id
@@ -18,7 +18,8 @@ public class WinningProduct extends BaseEntity{
     // 무형의 경우(사진, 영상, 음성)
     private String uploadFileName;
     private String originalFileName;
-    private String FileUrl;
+    @Column(length = 20000)
+    private String fileUrl;
 
 
 }

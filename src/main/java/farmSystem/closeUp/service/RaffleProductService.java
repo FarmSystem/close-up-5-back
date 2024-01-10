@@ -12,6 +12,7 @@ import farmSystem.closeUp.repository.pointHistory.PointHistoryRepository;
 import farmSystem.closeUp.repository.raffle.RaffleRepository;
 import farmSystem.closeUp.repository.raffleProduct.RaffleProductRepository;
 import farmSystem.closeUp.repository.raffleProduct.RaffleProductRepositoryImpl;
+import farmSystem.closeUp.repository.winningProduct.WinningProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,7 +47,7 @@ public class RaffleProductService {
     private final RaffleRepository raffleRepository;
     private final PointHistoryRepository pointHistoryRepository;
     private final CategoryRepository categoryRepository;
-
+    private final WinningProductRepository winningProductRepository;
 
 
     // 회원님이 팔로우하는 크리에이터 래플 목록 조회
@@ -176,31 +178,46 @@ public class RaffleProductService {
         return findRaffles;
     }
 
+    // 크리에이터 - 래플 상품 생성
     @Transactional
-    public PostCreateRaffleProductResponse postCreateRaffleProduct(MultipartFile thumbnailImage, PostCreateRaffleProductRequest postCreateRaffleProductRequest) throws IOException {
+    public PostCreateRaffleProductResponse postCreateRaffleProduct(MultipartFile thumbnailImage, MultipartFile attachedFile, PostCreateRaffleProductRequest postCreateRaffleProductRequest) throws IOException {
         // 현재 크리에이터 조회
         User user = userService.getCurrentUser();
 
+        log.info("category");
+        log.info(postCreateRaffleProductRequest.getCategoryId().toString());
         // 카테고리 조회
-        Category category = categoryRepository.findByCategoryId(postCreateRaffleProductRequest.getCategoryId()).orElseThrow(() -> new CustomException(Result.NOTFOUND_CATEGORY));
+        Category category = categoryRepository.findById(postCreateRaffleProductRequest.getCategoryId()).orElseThrow(() -> new CustomException(Result.NOTFOUND_CATEGORY));
 
-        // 당첨자 발표 날짜 구하기 - 래플 종료 일 정오 12시
-        LocalDateTime endDate = postCreateRaffleProductRequest.getEndDate();
-        LocalDateTime winningDate = endDate.plusDays(0).withHour(12).withMinute(0).withSecond(0).withNano(0);
+        // 당첨자 발표 시간 구하기 - 래플 종료 일 다음날 낮 12시
+        LocalDate endDate = postCreateRaffleProductRequest.getEndDate();
+        LocalDateTime winningDate = endDate.plusDays(1).atTime(12, 0, 0);
 
         // 섬네일 이미지 s3에 저장
         String thumbnailImageUrl = null;
+        String attachedFileUrl = null;
+        String attachedFileName = null;
         if(!thumbnailImage.isEmpty()) {
-            String storedFileName = s3Uploader.upload(thumbnailImage, "raffle_thumbnail");
-            thumbnailImageUrl = storedFileName;
+            thumbnailImageUrl = s3Uploader.upload(thumbnailImage, thumbnailImage.getOriginalFilename()+ UUID.randomUUID());
+            attachedFileName = attachedFile.getOriginalFilename() + UUID.randomUUID();
+            attachedFileUrl = s3Uploader.upload(attachedFile, attachedFileName);
+
         }
+
+        WinningProduct winningProduct = WinningProduct.builder()
+                .uploadFileName(attachedFileName)
+                .originalFileName(attachedFile.getOriginalFilename())
+                .fileUrl(attachedFileUrl)
+                .build();
+
+        winningProductRepository.save(winningProduct);
 
         // 래플 상품 생성
         RaffleProduct raffleProduct = RaffleProduct.builder()
                 .title(postCreateRaffleProductRequest.getTitle())
                 .startDate(postCreateRaffleProductRequest.getStartDate())
                 .endDate(postCreateRaffleProductRequest.getEndDate())
-                .winningDate(winningDate)
+                .winningDate(LocalDateTime.from(winningDate))
                 .content(postCreateRaffleProductRequest.getContent())
                 .winnerCount(postCreateRaffleProductRequest.getWinnerCount())
                 .rafflePrice(postCreateRaffleProductRequest.getRafflePrice())
@@ -209,12 +226,9 @@ public class RaffleProductService {
                 .category(category)
                 .build();
 
-        // 무형인지 유형인지 판단
-//        if (category.getParent().getCategoryId() == Long.valueOf(2)) {
-//            raffleProduct.
-//        }
-
         raffleProductRepository.save(raffleProduct);
-        return PostCreateRaffleProductResponse.of(winningDate);
+
+        raffleProduct.setWinningProduct(winningProduct);
+        return PostCreateRaffleProductResponse.of(winningDate, postCreateRaffleProductRequest.getStartDate(), postCreateRaffleProductRequest.getEndDate());
     }
 }

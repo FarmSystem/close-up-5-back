@@ -79,28 +79,25 @@ public class User extends BaseEntity{
     }
 
     // 유저 회원가입
-    public void update(Long id, String nickname, String address, String phoneNumber, String profileImageUrl, String gender, String birthDay, UserRole userRole) {
+    public void update(Long id, String nickname, String address, String phoneNumber, String profileImageUrl, UserRole userRole) {
         this.userId = id;
         this.nickName = nickname;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.profileImageUrl = profileImageUrl;
-        this.gender = gender;
-        this.birthDay = birthDay;
         this.userRole = userRole;
     }
 
 
     // 크리에이터 회원가입
-    public void update(Long id, String nickname, String address, String phoneNumber, String profileImageUrl, String profileComment, String gender, String birthDay, UserRole userRole) {
+    public void update(Long id, String nickname, String address, String phoneNumber, String profileImageUrl, String profileComment, String verificationImageUrl, UserRole userRole) {
         this.userId = id;
         this.nickName = nickname;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.profileImageUrl = profileImageUrl;
         this.profileComment = profileComment;
-        this.gender = gender;
-        this.birthDay = birthDay;
+        this.verificationImageUrl = verificationImageUrl;
         this.userRole = userRole;
     }
 
@@ -123,9 +120,9 @@ public class User extends BaseEntity{
         this.point -= point;
     }
 
-    public void setProfileImageUrl(String fileName) {
-        this.profileImageUrl = fileName;
-    }
+//    public void setProfileImageUrl(String fileName) {
+//        this.profileImageUrl = fileName;
+//    }
 
     public void setVerificationImageUrl(String fileName) {
         this.verificationImageUrl = fileName;

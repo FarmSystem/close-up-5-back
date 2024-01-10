@@ -18,10 +18,10 @@ public class UserInfoRequest {
     @NotBlank(message = "휴대전화번호 입력은 필수입니다.")
     private String phoneNumber;
 
-    private String profileImageUrl;
-
-    @NotBlank(message = "성별 입력은 필수입니다.")
-    private String gender;
-    @NotBlank(message = "생일 입력은 필수입니다.")
-    private String birthday;
+//    private String profileImageUrl;
+//
+//    @NotBlank(message = "성별 입력은 필수입니다.")
+//    private String gender;
+//    @NotBlank(message = "생일 입력은 필수입니다.")
+//    private String birthday;
 }
