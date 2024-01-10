@@ -18,6 +18,10 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -34,7 +38,17 @@ public class SecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtExceptionFilter jwtExceptionFilter;
 
-
+    // ⭐️ CORS 설정
+    CorsConfigurationSource corsConfigurationSource() {
+        return request -> {
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowedHeaders(Collections.singletonList("*"));
+            config.setAllowedMethods(Collections.singletonList("*"));
+            config.setAllowedOriginPatterns(Collections.singletonList("http://localhost:5173")); // ⭐️ 허용할 origin
+            config.setAllowCredentials(true);
+            return config;
+        };
+    }
 
 
     @Bean
@@ -43,8 +57,7 @@ public class SecurityConfig {
                 .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable()) //csrf 비활성
                 .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.disable()) //폼 로그인 비활성
                 .httpBasic(httpSecurityHttpBasicConfigurer -> httpSecurityHttpBasicConfigurer.disable()) //HTTP 기본인증 비활성
-                .addFilter(corsConfig.corsFilter())
-
+                .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
                 .exceptionHandling(exceptionHandlingConfigurer -> exceptionHandlingConfigurer
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler))
