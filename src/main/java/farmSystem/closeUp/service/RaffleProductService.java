@@ -104,7 +104,7 @@ public class RaffleProductService {
     public GetRaffleProductResponse getRaffleProduct(Long raffleProductId) {
         RaffleProduct raffleProduct = raffleProductRepository.findById(raffleProductId).orElseThrow(() -> new CustomException(Result.NOTFOUND_RAFFLE));
         GetRaffleProductResponse getRaffleProductResponse = GetRaffleProductResponse.
-                of(raffleProduct.getRaffleProductId(), raffleProduct.getTitle(), raffleProduct.getStartDate(), raffleProduct.getEndDate(), raffleProduct.getContent(), raffleProduct.getWinnerCount(), raffleProduct.getRafflePrice(), raffleProduct.getWinningDate(), raffleProduct.getThumbnailImageUrl(), raffleProduct.getCreator().getNickName(), raffleProduct.getCreator().getUserId());
+                of(raffleProduct.getRaffleProductId(), raffleProduct.getTitle(), raffleProduct.getStartDate(), raffleProduct.getEndDate(), raffleProduct.getContent(), raffleProduct.getWinnerCount(), raffleProduct.getRafflePrice(), raffleProduct.getWinningDate(), raffleProduct.getThumbnailImageUrl(), raffleProduct.getCreator().getNickName(), raffleProduct.getCreator().getUserId(), raffleProduct.getCreator().getProfileImageUrl());
         return getRaffleProductResponse;
     }
 
