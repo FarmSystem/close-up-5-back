@@ -24,7 +24,8 @@ public class ProfileRepositoryImpl implements ProfileRepositoryCustom{
                     findProfile.getUserId(),
                     findProfile.getNickName(),
                     findProfile.getProfileImageUrl(),
-                    findProfile.getProfileComment()
+                    findProfile.getProfileComment(),
+                    findProfile.getPoint()
 
             );
         } else {
