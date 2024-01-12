@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -38,5 +39,10 @@ public class RaffleController {
     @GetMapping("/user/raffles/{raffleId}")
     public CommonResponse<GetUserRaffleDetailResponse> getRaffleDetail(@PathVariable("raffleId") Long raffleId) {
         return CommonResponse.success(raffleService.getRaffleDetail(raffleId));
+    }
+
+    @PostMapping("/user/raffles/{raffleId}/download")
+    public CommonResponse<String> downloadWinningProduct(@PathVariable("raffleId") Long raffleId) {
+        return CommonResponse.success(raffleService.downloadWinningProduct(raffleId));
     }
 }

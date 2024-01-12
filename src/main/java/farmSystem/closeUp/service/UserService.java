@@ -7,6 +7,7 @@ import farmSystem.closeUp.config.redis.RedisUtils;
 import farmSystem.closeUp.config.security.SecurityUtils;
 import farmSystem.closeUp.domain.*;
 import farmSystem.closeUp.dto.creator.request.PostCreatorSettingRequest;
+import farmSystem.closeUp.dto.profile.response.GetProfileResponse;
 import farmSystem.closeUp.dto.user.request.PostCreatorInfoRequest;
 import farmSystem.closeUp.dto.user.request.UserFollowRequest;
 import farmSystem.closeUp.dto.user.request.UserInfoRequest;
@@ -299,5 +300,10 @@ public class UserService {
         user.authorizeUser(UserRole.CREATOR);
 
         return PostSignUpResponse.of(user.getUserId(), user.getUserRole());
+    }
+
+    public GetProfileResponse getUserProfile() {
+        User user = getCurrentUser();
+        return GetProfileResponse.of(user.getUserId(), user.getNickName(), user.getProfileImageUrl(), user.getProfileComment(), user.getPoint());
     }
 }

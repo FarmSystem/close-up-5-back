@@ -134,4 +134,10 @@ public class RaffleService {
                 return result;
         }
     }
+
+    public String downloadWinningProduct(Long raffleId) {
+        Raffle raffle = raffleRepository.findById(raffleId).orElseThrow(() -> new CustomException(Result.NOTFOUND_RAFFLE));
+        String fileUrl = raffle.getRaffleProduct().getWinningProduct().getFileUrl();
+        return fileUrl;
+    }
 }

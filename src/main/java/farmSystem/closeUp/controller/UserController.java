@@ -3,6 +3,7 @@ package farmSystem.closeUp.controller;
 
 import farmSystem.closeUp.common.CommonResponse;
 import farmSystem.closeUp.dto.creator.request.PostCreatorSettingRequest;
+import farmSystem.closeUp.dto.profile.response.GetProfileResponse;
 import farmSystem.closeUp.dto.user.request.PostCreatorInfoRequest;
 import farmSystem.closeUp.dto.user.request.UserFollowRequest;
 import farmSystem.closeUp.dto.user.request.UserInfoRequest;
@@ -41,6 +42,12 @@ public class UserController {
     @PostMapping(value = "/creator/sign-up")
     public CommonResponse<PostSignUpResponse> signUpCreator(@RequestPart @Valid final PostCreatorInfoRequest postCreatorInfoRequest, @RequestPart MultipartFile profileImage, @RequestPart MultipartFile verificationImage){
         return CommonResponse.success(userService.signUpCreator(postCreatorInfoRequest, profileImage, verificationImage));
+    }
+
+    // 유저 프로필 + 포인트 조회
+    @GetMapping(value = "/user/profile")
+    public CommonResponse<GetProfileResponse> getUserProfile(){
+        return CommonResponse.success(userService.getUserProfile());
     }
 
     // 따라서 redis의 refreshToken과 전달받은 refreshToken 비교 후 일치한다면 accessToken, refreshToken 재발급

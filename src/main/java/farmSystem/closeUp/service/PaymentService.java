@@ -15,6 +15,7 @@ import farmSystem.closeUp.dto.payment.response.PostPaymentVerifyResponse;
 import farmSystem.closeUp.repository.pointHistory.PointHistoryRepository;
 import farmSystem.closeUp.repository.payment.PaymentRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,7 @@ import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
@@ -32,17 +34,23 @@ public class PaymentService {
 
     @Transactional
     public PostPaymentVerifyResponse verifyIamportService(PostPaymentVerifyRequest postPaymentVerifyRequest, IamportClient iamportClient) throws IamportResponseException, IOException {
+        log.info(postPaymentVerifyRequest.getAmount());
+        log.info(postPaymentVerifyRequest.getImp_uid());
+        log.info(postPaymentVerifyRequest.getMerchantId());
+
         // imp_uid로 아임포트 서버쪽에 결제된 정보 조회.
         IamportResponse<Payment> paymentIamportResponse = iamportClient.paymentByImpUid(postPaymentVerifyRequest.getImp_uid());
         Long payAmount = paymentIamportResponse.getResponse().getAmount().longValue();
 
+        log.info("가격 조회");
         // db에서 상품 가격 조회
         String merchantId = postPaymentVerifyRequest.getMerchantId();
         farmSystem.closeUp.domain.Payment payment = paymentRepository.findByMerchantId(merchantId);
         Long chargePoint = payment.getChargePoint();
 
+        log.info("가격 비교");
         // 두개 가격 동일한지 비교
-        if (payAmount==chargePoint){
+        if (payAmount.equals(chargePoint)){
             // 동일하면 포인트 적립 처리 및 결제 정보 저장
             payment.successPaymentCharge(postPaymentVerifyRequest.getImp_uid(), Status.PLUS, LocalDateTime.now());
             PointHistory pointHistory = PointHistory.builder().plusPoint(chargePoint).pointHistoryName("포인트 충전").pointEventAt(LocalDateTime.now()).build();
