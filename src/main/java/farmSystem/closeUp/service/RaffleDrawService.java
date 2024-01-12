@@ -31,10 +31,9 @@ public class RaffleDrawService {
     public void raffleDraw() {
         log.info("추첨 시작");
         LocalDateTime now = LocalDateTime.now();
-        LocalDate localDate = now.toLocalDate(); // 날짜 정보만 추출
 
         // winningdate 기준으로 수정
-        List<RaffleProduct> matchingProducts = raffleProductRepository.findByWinningDate(localDate);
+        List<RaffleProduct> matchingProducts = raffleProductRepository.findByWinningDate(now);
 
         for (RaffleProduct product : matchingProducts) {
             Long winnerCount = product.getWinnerCount();

@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -54,15 +55,16 @@ public class PaymentService {
         return PostPaymentVerifyResponse.of(payment.getPaymentId(), payment.getMerchantId(), payment.getChargePoint(), payment.getStatus(), payment.getPaidAt());
     }
 
+    @Transactional
     public PostMerchantIdReponse chargePoint(Long amount){
         User user = userService.getCurrentUser();
         farmSystem.closeUp.domain.Payment payment;
         if (amount<5000){
             throw new CustomException(Result.LESS_THAN_MINIMUM_POINT);
         }else {
-//            payment = farmSystem.closeUp.domain.Payment.builder().chargePoint(amount).status(Status.NONE).merchantId("merchant_" + new Date().getTime()).createAt(LocalDateTime.now()).build();
+            payment = farmSystem.closeUp.domain.Payment.builder().chargePoint(amount).status(Status.NONE).merchantId("merchant_" + new Date().getTime()).createAt(LocalDateTime.now()).build();
             //위의 코드가 실제 코드 아래는 테스팅 코드
-            payment = farmSystem.closeUp.domain.Payment.builder().chargePoint(amount).status(Status.NONE).merchantId("1").createAt(LocalDateTime.now()).build();
+//            payment = farmSystem.closeUp.domain.Payment.builder().chargePoint(amount).status(Status.NONE).merchantId("1").createAt(LocalDateTime.now()).build();
 
             payment.setUser(user);
             paymentRepository.save(payment);
