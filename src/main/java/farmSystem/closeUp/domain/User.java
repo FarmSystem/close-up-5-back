@@ -127,4 +127,8 @@ public class User extends BaseEntity{
     public void setVerificationImageUrl(String fileName) {
         this.verificationImageUrl = fileName;
     }
+
+    public void setPoint(Long point) {
+        this.point += point;
+    }
 }

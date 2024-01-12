@@ -56,6 +56,9 @@ public class PaymentService {
             PointHistory pointHistory = PointHistory.builder().plusPoint(chargePoint).pointHistoryName("포인트 충전").pointEventAt(LocalDateTime.now()).build();
             pointHistoryRepository.save(pointHistory);
             pointHistory.setUser(userService.getCurrentUser());
+            User user = userService.getCurrentUser();
+            user.setPoint(chargePoint);
+
         }else {
             payment.failPaymentCharge(postPaymentVerifyRequest.getImp_uid(), Status.FAIL, LocalDateTime.now(), "결제 금액과 충전 금액이 일치하지 않습니다.");
             throw new CustomException(Result.NOT_EQUAL_AMOUNT);
