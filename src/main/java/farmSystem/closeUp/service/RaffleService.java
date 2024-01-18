@@ -19,6 +19,7 @@ import javax.naming.AuthenticationException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -116,7 +117,7 @@ public class RaffleService {
                     .raffleProductThumbnailUrl(raffle.getRaffleProduct().getThumbnailImageUrl())
                     .raffleProductContent(raffle.getRaffleProduct().getContent())
                     .raffleUserAddress(raffle.getUser().getAddress())
-                    .winningProductUrl(raffle.getRaffleProduct().getWinningProduct().getFileUrl())
+                    .winningProductUrl(Optional.ofNullable(raffle.getRaffleProduct().getWinningProduct().getFileUrl()))
                     .build();
             return result;
             } else {

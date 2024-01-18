@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Getter
 @SuperBuilder
@@ -17,5 +18,5 @@ public class GetUserRaffleDetailResponse {
     private String raffleProductThumbnailUrl;
     private String raffleProductContent;
     private String creatorName;
-    private String winningProductUrl;
+    private Optional<String> winningProductUrl;
 }
