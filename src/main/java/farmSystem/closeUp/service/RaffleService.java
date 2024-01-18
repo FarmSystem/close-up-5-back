@@ -5,6 +5,7 @@ import farmSystem.closeUp.common.Result;
 import farmSystem.closeUp.domain.Raffle;
 import farmSystem.closeUp.domain.User;
 import farmSystem.closeUp.domain.WinningInfo;
+import farmSystem.closeUp.domain.WinningProduct;
 import farmSystem.closeUp.dto.raffle.response.GetRafflesUserResponse;
 import farmSystem.closeUp.dto.raffle.response.GetUserRaffleDetailIntangibleResponse;
 import farmSystem.closeUp.dto.raffle.response.GetUserRaffleDetailResponse;
@@ -107,6 +108,9 @@ public class RaffleService {
 
         // 당첨의 경우
         if (raffle.getWinningInfo().equals(WinningInfo.WINNING)) {
+            Optional<String> winningProductUrl = Optional.ofNullable(raffle.getRaffleProduct().getWinningProduct())
+                    .map(WinningProduct::getFileUrl);
+
             GetUserRaffleDetailTangible result = GetUserRaffleDetailTangible.builder()
                     .winningInfo(raffle.getWinningInfo())
                     .raffleCreateDate(raffle.getCreatedAt())
@@ -117,7 +121,7 @@ public class RaffleService {
                     .raffleProductThumbnailUrl(raffle.getRaffleProduct().getThumbnailImageUrl())
                     .raffleProductContent(raffle.getRaffleProduct().getContent())
                     .raffleUserAddress(raffle.getUser().getAddress())
-                    .winningProductUrl(Optional.ofNullable(raffle.getRaffleProduct().getWinningProduct().getFileUrl()))
+                    .winningProductUrl(winningProductUrl.orElse(null))
                     .build();
             return result;
             } else {
