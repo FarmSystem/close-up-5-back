@@ -64,7 +64,7 @@ INSERT INTO raffle_product (title, start_date, end_date, content, winner_count, 
 VALUES ('침착맨 굿즈 나눔', '2024-01-13', '2024-01-26', '이번에 새로 출시한 저의 굿즈입니다. 미리 선공개하는 거니까 많이들 응모하세요!!', 40, 5000, '서울시 강남구', '2024-01-27 12:00:00', 'https://mblogthumb-phinf.pstatic.net/MjAyMjA4MDdfMjAy/MDAxNjU5ODA0NTUzMDkw.1b0gGGpM00dkD-h3BAsNiTUbsvU_LNxjtwpkLdV54eQg.4r_iO1v778AVTJTB7Ec8GReBMTAkdCHcQFIOQHuavrEg.JPEG.jhggo3/IMG_2926.jpg?type=w800', 2, 6, null,'2024-01-13');
 
 INSERT INTO raffle_product (title, start_date, end_date, content, winner_count, raffle_price, address, winning_date, thumbnail_image_url, user_id, category_id, winning_product_id, created_at)
-VALUES ('미공개 게임 유튜브 영상', '2024-01-03', '2024-01-15', '이번에 찍은 유튜브 영상의 쿠키 영상인데, 여러분들에게만 공개합니다!', 10, 3000, '서울시 강남구', '2024-01-16 12:00:00', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiD0zrSU0_f7oEWbrMYgptJbzxlxGpWommBQ&usqp=CAU', 3, 2, 1,'2024-01-03');
+VALUES ('미공개 게임 영상', '2024-01-03', '2024-01-15', '이번에 찍은 유튜브 영상의 쿠키 영상인데, 여러분들에게만 공개합니다!', 10, 3000, '서울시 강남구', '2024-01-16 12:00:00', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiD0zrSU0_f7oEWbrMYgptJbzxlxGpWommBQ&usqp=CAU', 3, 2, 1,'2024-01-03');
 
 INSERT INTO raffle_product (title, start_date, end_date, content, winner_count, raffle_price, address, winning_date, thumbnail_image_url, user_id, category_id, winning_product_id, created_at)
 VALUES ('맛집 목록 파일', '2024-01-14', '2024-01-27', '제가 먹방 많이 다녔는데, 그간 맛있었던 음식점과 느낀점 목록입니다. 여러분도 모두 맛있는 하루 되시길 바래요!', 20, 6000, '서울시 강남구', '2024-01-26 12:00:00', 'https://www.siksinhot.com/theme/view/wp-content/uploads/2023/02/%EC%AF%94%EC%96%91%EB%A7%9B%EC%A7%91-%EC%A0%9C%EC%9D%BC%EB%B6%84%EC%8B%9D01.jpg', 4, 7, 2,'2024-01-14');
