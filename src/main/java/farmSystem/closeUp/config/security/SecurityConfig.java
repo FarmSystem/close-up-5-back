@@ -71,9 +71,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/login-success-test/**").permitAll()
                         .requestMatchers("/health","/token/reissue", "/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**").permitAll()
+                        .requestMatchers("/user/raffle-products", "/user/raffle-products/{raffleProductId}").hasAnyRole(String.valueOf(UserRole.USER), String.valueOf(UserRole.CREATOR))
                         .requestMatchers("/user/sign-up/**").hasAnyRole(String.valueOf(UserRole.GUEST), String.valueOf(UserRole.SIGNUP_USER), String.valueOf(UserRole.FOLLOWED_USER), String.valueOf(UserRole.INTERESTED_USER))
                         .requestMatchers("/user/**").hasRole(String.valueOf(UserRole.USER))
-                        .requestMatchers("/user/raffle-products", "/user/raffle-products/{raffleProductId}").hasAnyRole(String.valueOf(UserRole.USER), String.valueOf(UserRole.CREATOR))
                         .requestMatchers("/creator/sign-up/**").hasAnyRole(String.valueOf(UserRole.GUEST), String.valueOf(UserRole.SIGNUP_CREATOR))
                         .requestMatchers("/creator/**").hasRole(String.valueOf(UserRole.CREATOR))
                     .anyRequest().authenticated()
